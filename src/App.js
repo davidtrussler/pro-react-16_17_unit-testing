@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import {ValueInput} from './ValueInput';
+import {Result} from './Result';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+  constructor(props) {
+    super(props); 
+
+    this.state = {
+      title: this.props.title || 'Simple Addition', 
+      fieldValues: [], 
+      total: 0
+    }
+  }
+
+  updateFieldValue = (id, value) => {
+    this.setState(
+      state => {
+        state.fieldValues[id] = Number(value); 
+
+        return state; 
+      }
+    ); 
+  }
+
+  updateTotal = () => {
+    this.setState(
+      state => ({
+        total: state.fieldValues.reduce((total, val) => total += val, 0)
+      })
+    )
+  }
+
+  render() {
+    return (
+      <div className="n-2">
+        <h5 className="bg-primary text-white text-center p-2">
+          {this.state.title}
+        </h5>
+
+        <Result result={this.state.total}/>
+
+        <ValueInput id="1" changeCallback={this.updateFieldValue}/>
+        <ValueInput id="2" changeCallback={this.updateFieldValue}/>
+        <ValueInput id="3" changeCallback={this.updateFieldValue}/>
+
+        <div className="text-center">
+          <button
+            className="btn btn-primary"
+            onClick={this.updateTotal}
+          >
+            Total
+          </button>
+        </div>
+      </div>
+    );
+  }
 }
-
-export default App;
