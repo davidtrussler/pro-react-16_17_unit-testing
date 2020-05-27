@@ -2,6 +2,7 @@ import React from 'react';
 import Adapter from 'enzyme-adapter-react-16'; 
 import Enzyme, {shallow, mount} from 'enzyme'; 
 import App from './App';
+import {ValueInput} from './ValueInput'; 
 
 Enzyme.configure({adapter: new Adapter()}); 
 
@@ -36,4 +37,16 @@ it('Updates total when button is clicked', () => {
 	button.simulate('click'); 
 
 	expect(wrapper.state('total')).toBe(values.reduce((total, val) => total +  val), 0); 
+}); 
+
+it('Child function prop updates state', () => {
+	const wrapper = mount(<App />); 
+	const valInput = wrapper.find(ValueInput).first(); 
+	const inputElem = valInput.find('input').first(); 
+
+	inputElem.simulate('change', {target: {value: '100'}}); 
+	wrapper.instance().updateTotal(); 
+
+	expect(valInput.state('fieldValue')).toBe('100'); 
+	expect(wrapper.state('total')).toBe(100); 
 }); 
